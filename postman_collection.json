@@ -1,0 +1,268 @@
+{
+  "info": {
+    "name": "TickerController Collection",
+    "description": "Collection for TickerController endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Tickers",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/ticker",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "ticker"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Add Ticker - AAPL",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Symbol\": \"AAPL\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/ticker",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "ticker"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Add Ticker - GOOG",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Symbol\": \"GOOG\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/ticker",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "ticker"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Add Ticker - MSFT",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Symbol\": \"MSFT\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/ticker",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "ticker"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Add Ticker - AMZN",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Symbol\": \"AMZN\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/ticker",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "ticker"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Add Ticker - TSLA",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Symbol\": \"TSLA\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/ticker",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "ticker"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Ticker - AAPL",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/ticker/AAPL",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "ticker",
+            "AAPL"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Ticker - GOOG",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/ticker/GOOG",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "ticker",
+            "GOOG"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Ticker - MSFT",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/ticker/MSFT",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "ticker",
+            "MSFT"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Ticker - AMZN",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/ticker/AMZN",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "ticker",
+            "AMZN"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Ticker - TSLA",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/ticker/TSLA",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "ticker",
+            "TSLA"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "info": {
+    "_postman_id": "abc12345-6789-0123-4567-89abcdef1234",
+    "name": "Indian Stocks Historical Data",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "RELIANCE.BO - 1 Year Data",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:5000/historical-data?ticker=RELIANCE.BO&date_range=1y&interval=1d",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "5000",
+          "path": ["historical-data"],
+          "query": [
+            {"key": "ticker", "value": "RELIANCE.BO"},
+            {"key": "date_range", "value": "1y"},
+            {"key": "interval", "value": "1d"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "TCS.BO - 6 Months Data",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:5000/historical-data?ticker=TCS.BO&date_range=6mo&interval=1d",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "5000",
+          "path": ["historical-data"],
+          "query": [
+            {"key": "ticker", "value": "TCS.BO"},
+            {"key": "date_range", "value": "6mo"},
+            {"key": "interval", "value": "1d"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "INFY.BO - 3 Months Data",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:5000/historical-data?ticker=INFY.BO&date_range=3mo&interval=1d",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "5000",
+          "path": ["historical-data"],
+          "query": [
+            {"key": "ticker", "value": "INFY.BO"},
+            {"key": "date_range", "value": "3mo"},
+            {"key": "interval", "value": "1d"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "HDFCBANK.BO - 1 Month Data",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:5000/historical-data?ticker=HDFCBANK.BO&date_range=1mo&interval=1d",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "5000",
+          "path": ["historical-data"],
+          "query": [
+            {"key": "ticker", "value": "HDFCBANK.BO"},
+            {"key": "date_range", "value": "1mo"},
+            {"key": "interval", "value": "1d"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "ICICIBANK.BO - 5 Days Data",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:5000/historical-data?ticker=ICICIBANK.BO&date_range=5d&interval=1d",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "5000",
+          "path": ["historical-data"],
+          "query": [
+            {"key": "ticker", "value": "ICICIBANK.BO"},
+            {"key": "date_range", "value": "5d"},
+            {"key": "interval", "value": "1d"}
+          ]
+        }
+      }
+    }
+  ]
+}
