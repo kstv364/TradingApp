@@ -1,7 +1,7 @@
 ﻿using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
 
-namespace TradingApp.Services
+namespace TradingApp.TradingApp.Services
 {
     public class EmailNotificationService
     {

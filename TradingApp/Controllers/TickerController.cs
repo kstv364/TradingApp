@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TradingApp.Models;
-using TradingApp.Repository;
+using TradingApp.TradingApp.Models;
+using TradingApp.TradingApp.Repository;
 
-namespace TradingApp.Controllers
+namespace TradingApp.TradingApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

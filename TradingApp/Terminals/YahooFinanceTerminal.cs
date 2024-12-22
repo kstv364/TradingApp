@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using TradingApp.Models;
+using TradingApp.TradingApp.Models;
 
 public class YahooFinanceTerminal : ITradingTerminal
 {

@@ -1,8 +1,8 @@
-﻿using TradingApp.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using TradingApp.TradingApp.Models;
 
-namespace TradingApp.Strategies
+namespace TradingApp.TradingApp.Strategies
 {
     public abstract class BaseStrategy : ITradingStrategy
     {

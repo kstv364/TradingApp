@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using TradingApp;
-using TradingApp.Repository;
-using TradingApp.Services;
+using System;
+using TradingApp.TradingApp.Repository;
+using TradingApp.TradingApp.Services;
+using TradingApp.TradingApp.Strategies;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -13,8 +14,9 @@ services.AddHttpClient<ITradingTerminal, YahooFinanceTerminal>();
 services.AddSingleton<EmailNotificationService>();
 services.AddSingleton<ITradingStrategy, MACDStrategy>();
 
+var connectionString = configuration.GetConnectionString("DefaultConnection");
 services.AddDbContext<TradingDbContext>(options =>
-    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 services.AddHostedService<TradingService>();
 services.AddControllers(); // Add this line to register controllers
 
@@ -39,5 +41,19 @@ else
 
 app.UseRouting();
 app.MapControllers();
+ApplyMigration();
 
 app.Run();
+
+void ApplyMigration()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var _db = scope.ServiceProvider.GetRequiredService<TradingDbContext>();
+
+        if (_db.Database.GetPendingMigrations().Count() > 0)
+        {
+            _db.Database.Migrate();
+        }
+    }
+}

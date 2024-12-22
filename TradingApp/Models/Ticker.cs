@@ -1,4 +1,4 @@
-namespace TradingApp.Models
+namespace TradingApp.TradingApp.Models
 {
     public class Ticker
     {
