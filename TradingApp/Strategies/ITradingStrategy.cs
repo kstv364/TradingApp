@@ -1,4 +1,4 @@
-﻿using TradingApp.Models;
+﻿using TradingApp.TradingApp.Models;
 
 public interface ITradingStrategy
 {

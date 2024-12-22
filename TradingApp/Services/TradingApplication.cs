@@ -1,10 +1,6 @@
-﻿using TradingApp.Models;
-using TradingApp.Repository;
-using TradingApp.Services;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Serilog.Configuration;
+﻿using TradingApp.TradingApp.Models;
+using TradingApp.TradingApp.Repository;
+using TradingApp.TradingApp.Services;
 
 public class TradingApplication
 {

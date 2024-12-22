@@ -1,8 +1,7 @@
 ﻿using System.Collections.Concurrent;
-using TradingApp.Models;
-using TradingApp.Strategies;
+using TradingApp.TradingApp.Models;
 
-namespace TradingApp
+namespace TradingApp.TradingApp.Strategies
 {
     public class MACDStrategy : BaseStrategy
     {
