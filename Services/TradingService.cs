@@ -24,7 +24,7 @@ public class TradingService : BackgroundService
                     scope.ServiceProvider.GetRequiredService<EmailNotificationService>(),
                     scope.ServiceProvider.GetRequiredService<ILogger<TradingApplication>>());
             await _app.RunAsync();
-            await Task.Delay(TimeSpan.FromMinutes(10), stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
         }
     }
 }

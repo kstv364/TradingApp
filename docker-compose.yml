@@ -1,29 +1,27 @@
 version: '3.8'
 services:
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    environment:
-      SA_PASSWORD: ${SA_PASSWORD}
-      ACCEPT_EULA: "Y"
+    image: mcr.microsoft.com/mssql/server:2022-latest     
     ports:
       - "1433:1433"
+    env_file:
+      - .env
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
   tradingapp:
     build:
       context: .
-    environment:
-      - ConnectionStrings__Default: "Server=sqlserver;Database=TradingAppDb;User Id=sa;Password=${SA_PASSWORD}"
-      - Email__Host: ${SMTP_SERVER}
-      - Email__Port: ${SMTP_PORT}
-      - Email__Username: ${SMTP_USER}
-      - EmailSettings__SmtpPass: ${SMTP_PASS}
-      - FinanceApi__BaseUrl: ${FINANCE_API_URL}
-      - Email__From : kstvkmrchanda2@gmail.com
-      - Email__To: kstvkmrchanda2@gmail.com
+    env_file:
+      - .env
     depends_on:
-      - sqlserver
+      - sqlserver      
     ports:
       - "8080:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
   pythonservice:
     build:
@@ -34,3 +32,6 @@ services:
       - "5000:5000"
     depends_on:
       - sqlserver
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
