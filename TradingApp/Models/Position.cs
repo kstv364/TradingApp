@@ -25,6 +25,21 @@ namespace TradingApp.TradingApp.Models
 
         public bool isOpen { get; set; } = true;
 
+        public static Position CreateBy(Order order)
+        {
+            return new Position
+            {
+                Ticker = order.Ticker,
+                EntryPrice = order.Price,
+                StopLoss = order.StopLoss,
+                TargetPrice = order.Price * 1.2,
+                Quantity = order.Quantity,
+                EntryDate = DateTime.UtcNow,
+                LastUpdated = DateTime.UtcNow,
+                isOpen = true
+            };
+        }
+
         public Position ModifyBy(Order order)
         {
             StopLoss = order.StopLoss;

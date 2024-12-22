@@ -27,14 +27,14 @@ public class TradingApplication
         var unsoldTrades = _dbContext.Positions.Where(p => p.isOpen).ToList();
 
         var orders = await _strategy.GenerateOrdersAsync(candlesByTicker, unsoldTrades);
-        
-        if(orders.Count == 0)
+
+        if (orders.Count == 0)
         {
             _logger.LogInformation("No orders to place.");
             return;
         }
 
-        foreach(var ticker in candlesByTicker.Keys)
+        foreach (var ticker in candlesByTicker.Keys)
         {
             _dbContext.Tickers.Update(ticker);
         }
@@ -42,6 +42,8 @@ public class TradingApplication
         await _dbContext.Orders.AddRangeAsync(orders);
         await _dbContext.SaveChangesAsync();
         var storedOrders = orders.ToList();
+
+        var notificationMessages = new List<string>();
 
         foreach (var order in storedOrders)
         {
@@ -65,15 +67,7 @@ public class TradingApplication
             }
             else
             {
-                var newPosition = new Position
-                {
-                    Ticker = order.Ticker,
-                    EntryPrice = order.Price,
-                    StopLoss = order.StopLoss,
-                    TargetPrice = order.Price * 1.2,
-                    Quantity = order.Quantity,
-                    EntryDate = DateTime.UtcNow
-                };
+                var newPosition = Position.CreateBy(order);
                 var pos = _dbContext.Positions.Add(newPosition);
                 await _dbContext.SaveChangesAsync();
 
@@ -82,11 +76,15 @@ public class TradingApplication
             }
 
             await _terminal.PlaceOrderAsync(order);
-            
-            _logger.LogInformation($"Trade Advised: {order.Type} Ticker: {order.Ticker} Type: {order.Type} Quantity: {order.Quantity} StopLoss: {order.StopLoss}");
-            await _notificationService.SendNotificationAsync($"Trade Advised: {order.Type}", $"Ticker: {order.Ticker}\nType: {order.Type}\nQuantity: {order.Quantity}\nStopLoss: {order.StopLoss}");
+
+            var message = $"Trade Advised: {order.Type} \nTicker: {order.Ticker} \nPrice :{order.Price} \nType: {order.Type} \nQuantity: {order.Quantity} \nStopLoss: {order.StopLoss}";
+            _logger.LogInformation(message);
+            notificationMessages.Add(message);
         }
 
+        await _notificationService.SendNotificationAsync(
+            $"Trade Advisories for :{DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}", 
+            string.Join("========================================================\n", notificationMessages));
         await _dbContext.SaveChangesAsync();
     }
 }
