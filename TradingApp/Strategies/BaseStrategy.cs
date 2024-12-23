@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TradingApp.TradingApp.Models;
+using TradingApp.Models;
 
-namespace TradingApp.TradingApp.Strategies
+namespace TradingApp.Strategies
 {
     public abstract class BaseStrategy : ITradingStrategy
     {
+        private const double TargetMultiplier = 1.3; // 30% profit target
         public virtual Task<List<Order>> GenerateOrdersAsync(Dictionary<Ticker, IEnumerable<Candle>> candlesByTicker, IEnumerable<Position> openPositions)
         {
             var orders = new List<Order>();
@@ -34,7 +35,10 @@ namespace TradingApp.TradingApp.Strategies
                             StopLoss = 0,
                             IsExitOrder = true,
                             Quantity = position.Quantity,
-                            positionId = position.Id
+                            positionId = position.Id,
+                            TargetPrice = CalculateTargetPrice(latestCandle.Close),
+                            Notes =
+                            $"Stop loss triggered ->  CurrentPrice : {latestCandle.Close}, SL : {position.StopLoss}"
                         });
                     }
                     else if (position.TargetPrice <= latestCandle.Close)
@@ -48,7 +52,9 @@ namespace TradingApp.TradingApp.Strategies
                             StopLoss = 0,
                             IsExitOrder = true,
                             Quantity = position.Quantity,
-                            positionId = position.Id
+                            positionId = position.Id,
+                            TargetPrice = CalculateTargetPrice(latestCandle.Close),
+                            Notes = $"Target price reached -> CurrentPrice : {latestCandle.Close}, TargetPrice : {position.TargetPrice}"
                         });
                     }
                     else
@@ -62,7 +68,9 @@ namespace TradingApp.TradingApp.Strategies
                             StopLoss = Math.Max(position.StopLoss, latestCandle.Close * 0.98),
                             IsExitOrder = false,
                             Quantity = position.Quantity,
-                            positionId = position.Id
+                            positionId = position.Id,
+                            TargetPrice = CalculateTargetPrice(latestCandle.Close),
+                            Notes = $"Stop loss updated -> CurrentPrice : {latestCandle.Close}, SL : {position.StopLoss}"
                         });
                     }
                 }
@@ -79,6 +87,11 @@ namespace TradingApp.TradingApp.Strategies
             }
 
             return true;
+        }
+
+        protected virtual double CalculateTargetPrice(double currentPrice)
+        {
+            return currentPrice * TargetMultiplier;
         }
 
     }

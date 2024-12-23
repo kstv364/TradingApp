@@ -1,4 +1,4 @@
-﻿using TradingApp.TradingApp.Models;
+﻿using TradingApp.Models;
 
 public interface ITradingTerminal
 {
