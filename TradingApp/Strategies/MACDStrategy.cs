@@ -1,13 +1,14 @@
-﻿using System.Collections.Concurrent;
-using TradingApp.TradingApp.Models;
+﻿using TradingApp.Models;
 
-namespace TradingApp.TradingApp.Strategies
+namespace TradingApp.Strategies
 {
     public class MACDStrategy : BaseStrategy
     {
         private const double TargetMultiplier = 1.3; // 30% profit target
         private double _capital = 10000; // Example capital amount
-        private int _windowLength = 10;
+
+        private const int PERIODS_PER_DAY = 72;
+        private int _windowLength = 10 * PERIODS_PER_DAY;
 
         public async override Task<List<Order>> GenerateOrdersAsync(Dictionary<Ticker, IEnumerable<Candle>> candlesByTicker, IEnumerable<Position> openPositions)
         {
@@ -31,6 +32,11 @@ namespace TradingApp.TradingApp.Strategies
                 var macdValues = CalculateMACD(candles);
                 var currentCandle = candles.Last();
 
+                if (macdValues.Count < _windowLength)
+                {
+                    throw new ArgumentException("Insufficient data to calculate MACD");
+                }
+
                 for (int i = macdValues.Count - _windowLength; i < macdValues.Count; i++)
                 {
                     if (macdValues[i - 1].MACDLine > macdValues[i - 1].SignalLine && macdValues[i].MACDLine < macdValues[i].SignalLine)
@@ -47,7 +53,9 @@ namespace TradingApp.TradingApp.Strategies
                                 StopLoss = 0,
                                 IsExitOrder = true,
                                 Quantity = position.Quantity,
-                                positionId = position.Id
+                                positionId = position.Id,
+                                Notes =
+                                $"Bearish signal detected at {macdValues[i].Time}-> Sell at Current Price : {currentCandle.Close}"
                             });
                         }
                         break;
@@ -70,7 +78,9 @@ namespace TradingApp.TradingApp.Strategies
                             Price = candles.Last().Close,
                             StopLoss = candles.Last().Close * 0.98,
                             IsExitOrder = false,
-                            Quantity = quantity
+                            Quantity = quantity,
+                            TargetPrice = CalculateTargetPrice(candles.Last().Close),
+                            Notes = $"Bullish signal detected at {macdValues[i].Time}-> Buy at Current Price : {currentCandle.Close}"
                         });
                     }
                 }
@@ -106,7 +116,8 @@ namespace TradingApp.TradingApp.Strategies
             return macdLine.Select((macd, index) => new MACDValue
             {
                 MACDLine = macd,
-                SignalLine = index < signalLine.Count ? signalLine[index] : 0
+                SignalLine = index < signalLine.Count ? signalLine[index] : 0,
+                Time = candles.ElementAt(index).Time
             }).ToList();
         }
 
@@ -134,7 +145,7 @@ namespace TradingApp.TradingApp.Strategies
             return ema;
         }
 
-        public double CalculateTargetPrice(double currentPrice)
+        protected override double CalculateTargetPrice(double currentPrice)
         {
             return currentPrice * TargetMultiplier;
         }

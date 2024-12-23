@@ -1,7 +1,6 @@
 ﻿using System.Net.Mail;
-using Microsoft.Extensions.Configuration;
 
-namespace TradingApp.TradingApp.Services
+namespace TradingApp.Services
 {
     public class EmailNotificationService
     {
@@ -13,11 +12,16 @@ namespace TradingApp.TradingApp.Services
 
         public async Task SendNotificationAsync(string subject, string body)
         {
+            var emailPassword = _configuration["Email:Password"];
+            if (string.IsNullOrEmpty(emailPassword))
+            {
+                emailPassword = Environment.GetEnvironmentVariable("Email__Password");
+            }
             var smtpClient = new SmtpClient
             {
                 Host = _configuration["Email:Host"],
                 Port = int.Parse(_configuration["Email:Port"]),
-                Credentials = new System.Net.NetworkCredential(_configuration["Email:Username"], _configuration["Email:Password"]),
+                Credentials = new System.Net.NetworkCredential(_configuration["Email:Username"], emailPassword),
                 EnableSsl = true,
             };
 

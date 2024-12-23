@@ -9,7 +9,7 @@ app = Flask(__name__)
 def get_historical_data():
     # Parse query parameters
     ticker = request.args.get("ticker")
-    date_range = request.args.get("date_range", "1y")  # Default: 1y
+    date_range = request.args.get("date_range", "3mo")  # Default: 3mo
     interval = request.args.get("interval", "1d")  # Default: 1d
 
     # Validate input

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TradingApp.TradingApp.Models;
+using TradingApp.Models;
 
-namespace TradingApp.TradingApp.Repository
+namespace TradingApp.Repository
 {
     public class TradingDbContext : DbContext
     {
