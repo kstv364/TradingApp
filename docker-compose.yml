@@ -19,7 +19,7 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-      - sqlserver-data:/var/opt/mssql  # Add this line to persist data
+      - tradingapp-sqlserver-data:/var/opt/mssql  # Add this line to persist data
 
   pythonservice:
     build:
@@ -35,4 +35,4 @@ services:
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
 volumes:
-  sqlserver-data:  # Define the named volume
+  tradingapp-sqlserver-data:  # Define the named volume

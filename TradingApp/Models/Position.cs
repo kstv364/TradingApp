@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TradingApp.TradingApp.Models
+namespace TradingApp.Models
 {
     public class Position
     {

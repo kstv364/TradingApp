@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using System;
-using TradingApp.TradingApp.Repository;
-using TradingApp.TradingApp.Services;
-using TradingApp.TradingApp.Strategies;
+using TradingApp.Repository;
+using TradingApp.Services;
+using TradingApp.Strategies;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -41,7 +40,10 @@ else
 
 app.UseRouting();
 app.MapControllers();
-ApplyMigration();
+if (!app.Environment.IsDevelopment())
+{
+    ApplyMigration();
+}
 
 app.Run();
 

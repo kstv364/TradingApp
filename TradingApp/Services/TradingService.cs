@@ -1,5 +1,5 @@
-﻿using TradingApp.TradingApp.Repository;
-using TradingApp.TradingApp.Services;
+﻿using TradingApp.Repository;
+using TradingApp.Services;
 
 public class TradingService : BackgroundService
 {

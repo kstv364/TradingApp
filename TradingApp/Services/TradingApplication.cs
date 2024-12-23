@@ -1,6 +1,6 @@
-﻿using TradingApp.TradingApp.Models;
-using TradingApp.TradingApp.Repository;
-using TradingApp.TradingApp.Services;
+﻿using TradingApp.Models;
+using TradingApp.Repository;
+using TradingApp.Services;
 
 public class TradingApplication
 {
@@ -77,14 +77,19 @@ public class TradingApplication
 
             await _terminal.PlaceOrderAsync(order);
 
-            var message = $"Trade Advised: {order.Type} \nTicker: {order.Ticker} \nPrice :{order.Price} \nType: {order.Type} \nQuantity: {order.Quantity} \nStopLoss: {order.StopLoss}";
+            var message = $"\nTrade Advised: {order.Type} " +
+                $"\nTicker: {order.Ticker} " +
+                $"\nPrice :{order.Price} \nType: {order.Type} " +
+                $"\nQuantity: {order.Quantity} " +
+                $"\nStopLoss: {order.StopLoss} " +
+                $"\nNotes: {order.Notes}";
             _logger.LogInformation(message);
             notificationMessages.Add(message);
         }
 
         await _notificationService.SendNotificationAsync(
             $"Trade Advisories for :{DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}", 
-            string.Join("========================================================\n", notificationMessages));
+            string.Join("\n====================================", notificationMessages));
         await _dbContext.SaveChangesAsync();
     }
 }
