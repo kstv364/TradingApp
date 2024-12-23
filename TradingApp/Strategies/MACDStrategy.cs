@@ -29,15 +29,16 @@ namespace TradingApp.Strategies
                     continue; // Skip processing if candles have not changed
                 }
 
-                var macdValues = CalculateMACD(candles);
-                var currentCandle = candles.Last();
-
-                if (macdValues.Count < _windowLength)
+                var filteredcandles = candles.Where(c =>
                 {
-                    throw new ArgumentException("Insufficient data to calculate MACD");
-                }
+                    return !ticker.LastProcessedTimestamp.HasValue || c.Time >= ticker.LastProcessedTimestamp;
+                }).ToList();
 
-                for (int i = macdValues.Count - _windowLength; i < macdValues.Count; i++)
+                var macdValues = CalculateMACD(filteredcandles);
+
+               var allowedWindow = Math.Min(_windowLength, macdValues.Count);
+
+                for (int i = macdValues.Count - allowedWindow + 1; i < macdValues.Count; i++)
                 {
                     if (macdValues[i - 1].MACDLine > macdValues[i - 1].SignalLine && macdValues[i].MACDLine < macdValues[i].SignalLine)
                     {
@@ -49,39 +50,40 @@ namespace TradingApp.Strategies
                             {
                                 Ticker = ticker.Symbol,
                                 Type = OrderType.Sell,
-                                Price = currentCandle.Close,
+                                Price = latestCandle.Close,
                                 StopLoss = 0,
                                 IsExitOrder = true,
                                 Quantity = position.Quantity,
                                 positionId = position.Id,
                                 Notes =
-                                $"Bearish signal detected at {macdValues[i].Time}-> Sell at Current Price : {currentCandle.Close}"
+                                $"Bearish signal detected at {macdValues[i].Time}-> Sell at Current Price : {latestCandle.Close}"
                             });
                         }
                         break;
                     }
                 }
 
-                for (int i = macdValues.Count - _windowLength; i < macdValues.Count; i++)
+                for (int i = macdValues.Count - allowedWindow + 1; i < macdValues.Count; i++)
                 {
                     if (macdValues[i - 1].MACDLine < macdValues[i - 1].SignalLine && macdValues[i].MACDLine > macdValues[i].SignalLine)
                     {
                         // Calculate signal strength and determine quantity
                         var signalStrength = CalculateSignalStrength(macdValues[i]);
-                        var quantity = (int)(_capital * signalStrength / candles.ElementAt(i).Close);
+                        var quantity = (int)(_capital * signalStrength / filteredcandles.ElementAt(i).Close);
 
                         // Allow only long positions
                         orders.Add(new Order
                         {
                             Ticker = ticker.Symbol,
                             Type = OrderType.Buy,
-                            Price = candles.Last().Close,
-                            StopLoss = candles.Last().Close * 0.98,
+                            Price = latestCandle.Close,
+                            StopLoss = latestCandle.Close * 0.98,
                             IsExitOrder = false,
                             Quantity = quantity,
-                            TargetPrice = CalculateTargetPrice(candles.Last().Close),
-                            Notes = $"Bullish signal detected at {macdValues[i].Time}-> Buy at Current Price : {currentCandle.Close}"
+                            TargetPrice = CalculateTargetPrice(latestCandle.Close),
+                            Notes = $"Bullish signal detected at {macdValues[i].Time}-> Buy at Current Price : {latestCandle.Close}"
                         });
+                        break;
                     }
                 }
 

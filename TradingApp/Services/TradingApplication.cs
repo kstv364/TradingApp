@@ -28,15 +28,15 @@ public class TradingApplication
 
         var orders = await _strategy.GenerateOrdersAsync(candlesByTicker, unsoldTrades);
 
+        foreach (var ticker in candlesByTicker.Keys)
+        {
+            _dbContext.Tickers.Update(ticker);
+        }
+
         if (orders.Count == 0)
         {
             _logger.LogInformation("No orders to place.");
             return;
-        }
-
-        foreach (var ticker in candlesByTicker.Keys)
-        {
-            _dbContext.Tickers.Update(ticker);
         }
 
         await _dbContext.Orders.AddRangeAsync(orders);

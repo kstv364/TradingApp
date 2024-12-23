@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using TradingApp.TradingApp.Models;
+using TradingApp.Models;
 
 public class YahooFinanceTerminal : ITradingTerminal
 {
@@ -19,7 +19,7 @@ public class YahooFinanceTerminal : ITradingTerminal
 
         foreach (var ticker in tickers)
         {
-            var url = $"{baseUrl}/historical-data?ticker={ticker.Symbol}&interval=1d&date_range=3mo";
+            var url = $"{baseUrl}/historical-data?ticker={ticker.Symbol}&interval=5m&date_range=1mo";
             var candles = new List<Candle>();
             var response = string.Empty;
             try
@@ -33,7 +33,7 @@ public class YahooFinanceTerminal : ITradingTerminal
                 {
                     var candle = new Candle
                     {
-                        Time = DateTime.Parse(result.GetProperty("Date").GetString()),
+                        Time = DateTime.Parse(result.GetProperty("Datetime").GetString()),
                         Open = result.GetProperty("Open").GetDouble(),
                         Close = result.GetProperty("Close").GetDouble(),
                         High = result.GetProperty("High").GetDouble(),
