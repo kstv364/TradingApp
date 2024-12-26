@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using TradingApp.Enums;
 using TradingApp.Models;
 
 public class YahooFinanceTerminal : ITradingTerminal
@@ -19,7 +20,7 @@ public class YahooFinanceTerminal : ITradingTerminal
 
         foreach (var ticker in tickers)
         {
-            var url = $"{baseUrl}/historical-data?ticker={ticker.Symbol}&interval=5m&date_range=1mo";
+            string url = BuildUrl(baseUrl, ticker);
             var candles = new List<Candle>();
             var response = string.Empty;
             try
@@ -51,6 +52,11 @@ public class YahooFinanceTerminal : ITradingTerminal
         }
 
         return candlesByTicker;
+    }
+
+    private static string BuildUrl(string? baseUrl, Ticker ticker)
+    {
+        return $"{baseUrl}/historical-data?ticker={ticker.Symbol}&interval={Interval.FiveMinutes}&date_range={DateRange.OneMonth}";
     }
 
     public Task PlaceOrderAsync(Order order)

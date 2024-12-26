@@ -40,6 +40,7 @@ else
 
 app.UseRouting();
 app.MapControllers();
+
 if (!app.Environment.IsDevelopment())
 {
     ApplyMigration();

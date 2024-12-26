@@ -25,6 +25,8 @@ public class Order
     public required int Quantity { get; set; } 
 
     public string? Notes { get; set; }
+
+    public bool IsOpen { get; set; } = true;
 }
 
 public enum OrderType { Buy, Sell, Modify } 
