@@ -8,7 +8,11 @@ namespace TradingApp.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
+        [Required]
         public required string Ticker { get; set; } // Primary key
+
+        [Required]
         public required double EntryPrice { get; set; }
         public double StopLoss { get; set; }
         public double TargetPrice { get; set; }

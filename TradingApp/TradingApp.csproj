@@ -11,9 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Logs\**" />
     <Compile Remove="TradingApp\**" />
+    <Content Remove="Logs\**" />
     <Content Remove="TradingApp\**" />
+    <EmbeddedResource Remove="Logs\**" />
     <EmbeddedResource Remove="TradingApp\**" />
+    <None Remove="Logs\**" />
     <None Remove="TradingApp\**" />
   </ItemGroup>
 

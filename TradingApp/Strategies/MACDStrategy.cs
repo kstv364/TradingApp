@@ -34,11 +34,11 @@ namespace TradingApp.Strategies
                     return !ticker.LastProcessedTimestamp.HasValue || c.Time >= ticker.LastProcessedTimestamp;
                 }).ToList();
 
-                var macdValues = CalculateMACD(filteredcandles);
+                var macdValues = CalculateMACD(candles);
 
-               var allowedWindow = Math.Min(_windowLength, macdValues.Count);
+                var allowedWindow = Math.Min(_windowLength, Math.Min(filteredcandles.Count, macdValues.Count));
 
-                for (int i = macdValues.Count - allowedWindow + 1; i < macdValues.Count; i++)
+                for (int i = macdValues.Count - 1; i >= macdValues.Count - allowedWindow + 1; i--)
                 {
                     if (macdValues[i - 1].MACDLine > macdValues[i - 1].SignalLine && macdValues[i].MACDLine < macdValues[i].SignalLine)
                     {
@@ -61,15 +61,11 @@ namespace TradingApp.Strategies
                         }
                         break;
                     }
-                }
-
-                for (int i = macdValues.Count - allowedWindow + 1; i < macdValues.Count; i++)
-                {
                     if (macdValues[i - 1].MACDLine < macdValues[i - 1].SignalLine && macdValues[i].MACDLine > macdValues[i].SignalLine)
                     {
                         // Calculate signal strength and determine quantity
                         var signalStrength = CalculateSignalStrength(macdValues[i]);
-                        var quantity = (int)(_capital * signalStrength / filteredcandles.ElementAt(i).Close);
+                        var quantity = (int)(_capital * signalStrength / candles.ElementAt(i).Close);
 
                         // Allow only long positions
                         orders.Add(new Order

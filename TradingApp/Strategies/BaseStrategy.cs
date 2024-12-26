@@ -6,7 +6,7 @@ namespace TradingApp.Strategies
 {
     public abstract class BaseStrategy : ITradingStrategy
     {
-        private const double TargetMultiplier = 1.3; // 30% profit target
+        private const double TargetMultiplier = 1.3;
         public virtual Task<List<Order>> GenerateOrdersAsync(Dictionary<Ticker, IEnumerable<Candle>> candlesByTicker, IEnumerable<Position> openPositions)
         {
             var orders = new List<Order>();
@@ -25,53 +25,59 @@ namespace TradingApp.Strategies
 
                 foreach (var position in openPositions.Where(p => p.Ticker == ticker.Symbol))
                 {
-                    if (latestCandle.Close < position.StopLoss)
+                    double currentClosePrice = latestCandle.Close;
+                    if (currentClosePrice < position.StopLoss)
                     {
                         orders.Add(new Order
                         {
                             Ticker = position.Ticker,
                             Type = OrderType.Sell,
-                            Price = latestCandle.Close,
+                            Price = currentClosePrice,
                             StopLoss = 0,
                             IsExitOrder = true,
                             Quantity = position.Quantity,
                             positionId = position.Id,
-                            TargetPrice = CalculateTargetPrice(latestCandle.Close),
+                            TargetPrice = CalculateTargetPrice(currentClosePrice),
                             Notes =
-                            $"Stop loss triggered ->  CurrentPrice : {latestCandle.Close}, SL : {position.StopLoss}"
+                            $"Stop loss triggered ->  CurrentPrice : {currentClosePrice}, SL : {position.StopLoss}"
                         });
                     }
-                    else if (position.TargetPrice <= latestCandle.Close)
+                    else if (position.TargetPrice <= currentClosePrice)
                     {
                         // Close position if target price is reached
                         orders.Add(new Order
                         {
                             Ticker = position.Ticker,
                             Type = OrderType.Sell,
-                            Price = latestCandle.Close,
+                            Price = currentClosePrice,
                             StopLoss = 0,
                             IsExitOrder = true,
                             Quantity = position.Quantity,
                             positionId = position.Id,
-                            TargetPrice = CalculateTargetPrice(latestCandle.Close),
-                            Notes = $"Target price reached -> CurrentPrice : {latestCandle.Close}, TargetPrice : {position.TargetPrice}"
+                            TargetPrice = CalculateTargetPrice(currentClosePrice),
+                            Notes = $"Target price reached -> CurrentPrice : {currentClosePrice}, TargetPrice : {position.TargetPrice}"
                         });
                     }
                     else
                     {
-                        // Update stop loss to the latest close price
-                        orders.Add(new Order
+                        var newStopLoss = Math.Max(position.StopLoss, currentClosePrice * 0.98);
+
+                        if(newStopLoss > position.StopLoss)
                         {
-                            Ticker = position.Ticker,
-                            Type = OrderType.Modify,
-                            Price = position.EntryPrice,
-                            StopLoss = Math.Max(position.StopLoss, latestCandle.Close * 0.98),
-                            IsExitOrder = false,
-                            Quantity = position.Quantity,
-                            positionId = position.Id,
-                            TargetPrice = CalculateTargetPrice(latestCandle.Close),
-                            Notes = $"Stop loss updated -> CurrentPrice : {latestCandle.Close}, SL : {position.StopLoss}"
-                        });
+                            // Update stop loss to the latest close price
+                            orders.Add(new Order
+                            {
+                                Ticker = position.Ticker,
+                                Type = OrderType.Modify,
+                                Price = position.EntryPrice,
+                                StopLoss = newStopLoss,
+                                IsExitOrder = false,
+                                Quantity = position.Quantity,
+                                positionId = position.Id,
+                                TargetPrice = CalculateTargetPrice(currentClosePrice),
+                                Notes = $"Stop loss updated -> CurrentPrice : {currentClosePrice}, SL : {position.StopLoss}"
+                            });
+                        }
                     }
                 }
             }
