@@ -51,9 +51,9 @@ public class Trader
             notificationMessages.Add(BuildNotification(order));
         }
 
-        await _notificationService.SendNotificationAsync(
-            $"Trade Advisories for :{DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}",
-            string.Join("\n====================================", notificationMessages));
+        //await _notificationService.SendNotificationAsync(
+        //    $"Trade Advisories for :{DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}",
+        //    string.Join("\n====================================", notificationMessages));
     }
     private string BuildNotification(Order order)
     {

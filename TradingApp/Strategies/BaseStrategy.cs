@@ -6,7 +6,7 @@ namespace TradingApp.Strategies
 {
     public abstract class BaseStrategy : ITradingStrategy
     {
-        private const double TargetMultiplier = 1.3;
+        protected const double TargetMultiplier = 1.3;
         public virtual Task<List<Order>> GenerateOrdersAsync(Dictionary<Ticker, IEnumerable<Candle>> candlesByTicker, IEnumerable<Position> openPositions)
         {
             var orders = new List<Order>();

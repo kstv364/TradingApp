@@ -1,3 +1,4 @@
+using ScottPlot;
 using TradingApp.Models;
 
 namespace TradingApp.Strategies
@@ -7,6 +8,7 @@ namespace TradingApp.Strategies
         private const double OverboughtThreshold = 70;
         private const double OversoldThreshold = 30;
         private const int RSIPeriod = 14;
+        private const int SignalWindow = 500; // Define the window size for processing signals
         private double _capital = 10000; // Example capital amount
 
         public async override Task<List<Order>> GenerateOrdersAsync(Dictionary<Ticker, IEnumerable<Candle>> candlesByTicker, IEnumerable<Position> openPositions)
@@ -27,11 +29,17 @@ namespace TradingApp.Strategies
                     continue; // Skip processing if candles have not changed
                 }
 
-                var rsiValues = CalculateRSI(candles);
+                // Restrict to the most recent 500 candles
+                var windowedCandles = candles.Skip(Math.Max(0, candles.Count() - SignalWindow)).ToList();
+
+                var rsiValues = CalculateRSI(windowedCandles);
 
                 if (rsiValues.Count < RSIPeriod) continue; // Ensure sufficient RSI data
 
                 var currentRSI = rsiValues.Last();
+
+                // Plot the RSI values
+                PlotRSI(rsiValues, ticker.Symbol);
 
                 if (currentRSI > OverboughtThreshold)
                 {
@@ -116,6 +124,31 @@ namespace TradingApp.Strategies
             }
 
             return rsiValues;
+        }
+
+        private void PlotRSI(List<double> rsiValues, string ticker)
+        {
+            // Create a new ScottPlot plot
+            var plt = new Plot(1200, 300);
+
+            // Plot the RSI values
+            var times = Enumerable.Range(1, rsiValues.Count).Select(t => (double)t).ToArray();
+            plt.AddScatter(times, rsiValues.ToArray(), label: "RSI", color: System.Drawing.Color.Blue);
+
+            // Add overbought and oversold lines
+            plt.AddHorizontalLine(OverboughtThreshold, color: System.Drawing.Color.Red, style: LineStyle.Dash);
+            plt.AddHorizontalLine(OversoldThreshold, color: System.Drawing.Color.Green, style: LineStyle.Dash);
+
+            // Customize the plot
+            plt.Title($"RSI Chart for {ticker}");
+            plt.XLabel("Time");
+            plt.YLabel("RSI Value");
+            plt.Legend();
+
+            // Save or display the plot
+            string filePath = $"RSI_{ticker}.png";
+            plt.SaveFig(filePath);
+            Console.WriteLine($"RSI plot saved to {filePath}");
         }
 
         protected override double CalculateTargetPrice(double currentPrice)

@@ -11,7 +11,7 @@ var configuration = builder.Configuration;
 // Configure services
 services.AddHttpClient<ITradingTerminal, YahooFinanceTerminal>();
 services.AddSingleton<EmailNotificationService>();
-services.AddSingleton<ITradingStrategy, MACDStrategy>();
+services.AddSingleton<ITradingStrategy, RSIStrategy>();
 
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 services.AddDbContext<TradingDbContext>(options =>
