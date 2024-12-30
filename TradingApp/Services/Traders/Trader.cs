@@ -43,10 +43,9 @@ public class Trader
         await _dbContext.SaveChangesAsync();
 
 
-        var storedOrders = orders.ToList();
         var notificationMessages = new List<string>();
 
-        foreach (var order in storedOrders)
+        foreach (var order in orders)
         {
             await _terminal.PlaceOrderAsync(order);
             notificationMessages.Add(BuildNotification(order));
@@ -64,6 +63,7 @@ public class Trader
             $"\nQuantity: {order.Quantity} " +
             $"\nStopLoss: {order.StopLoss} " +
             $"\nNotes: {order.Notes}";
+
         _logger.LogInformation(message);
         return message;
     }
